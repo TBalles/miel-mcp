@@ -1,0 +1,15 @@
+# Credenciales
+.env
+
+# Python / uv
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+dist/
+build/
+*.egg-info/
+
+# Descargas y estado local
+MIeL/
+.miel_estado.json
