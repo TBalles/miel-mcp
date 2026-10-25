@@ -44,6 +44,21 @@ def test_archivos():
     assert archivos[3].tipo_lectura == "Complementaria"
 
 
+def test_archivos_sin_tbody():
+    # Así llega el HTML crudo del servidor: filas directas bajo <table>.
+    html = """<main><div class="w3-accordion">
+      <div class="desplegarModulo"><span>Generalidades</span></div>
+      <div class="w3-accordion-content"><table>
+        <thead><tr><th colspan="2"> Programa del Curso <div></div></th><th></th><th></th><th></th><th></th></tr></thead>
+        <tr><td></td><td> Cronograma de clases <div></div></td><td>Obligatoria</td><td>07/10/2026</td><td>1.909 KB</td>
+          <td><a class="btnDescargar" href="https://miel.unlam.edu.ar/contenido/event/descargarElemento/comision/1/a/x.pdf/id/205544" title="Descargar Cronograma.pdf"></a></td></tr>
+      </table></div></div></main>"""
+    (a,) = parsers.parse_archivos(html)
+    assert (a.id, a.nombre, a.carpeta, a.seccion) == (
+        "205544", "Cronograma de clases", "Generalidades", "Programa del Curso"
+    )
+
+
 def test_archivos_vacio():
     assert parsers.parse_archivos("<main><p>No se encontraron archivos en este curso.</p></main>") == []
 

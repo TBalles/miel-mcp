@@ -33,7 +33,8 @@ def client() -> MielClient:
 
 
 def carpeta_descargas() -> Path:
-    return Path(os.getenv("MIEL_DESCARGAS", Path.home() / "MIeL")).expanduser()
+    # `or`: una variable definida pero vacía en el .env también usa el default.
+    return Path(os.getenv("MIEL_DESCARGAS") or Path.home() / "MIeL").expanduser().resolve()
 
 
 def _ruta_estado() -> Path:

@@ -126,13 +126,16 @@ def parse_archivos(html: str) -> list[Archivo]:
             boton = contenido.find_previous_sibling(class_="desplegarModulo")
             carpeta = _text(boton.select_one("span")) if boton else ""
 
+        # MIeL alterna <thead> (sección) y filas sueltas sin <tbody>; el
+        # navegador agrega el <tbody> en el DOM, así que aceptamos ambas formas.
         seccion = ""
-        for parte in table.find_all(["thead", "tbody"], recursive=False):
+        for parte in table.find_all(["thead", "tbody", "tr"], recursive=False):
             if parte.name == "thead":
                 th = parte.select_one("th")
                 seccion = _own_text(th) if th else ""
                 continue
-            for tr in parte.find_all("tr", recursive=False):
+            filas = [parte] if parte.name == "tr" else parte.find_all("tr", recursive=False)
+            for tr in filas:
                 tds = tr.find_all("td", recursive=False)
                 link = tr.select_one("a.btnDescargar") or tr.select_one("a[href]")
                 if len(tds) < 6 or link is None:
